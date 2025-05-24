@@ -32,7 +32,7 @@ export const QueryModal: React.FC<QueryModalProps> = ({
       </DialogTrigger>
       <DialogContent className="max-w-xl">
         <DialogHeader>
-          <DialogTitle>Generated SQL Query</DialogTitle>
+          <DialogTitle> SQL Query</DialogTitle>
           <DialogDescription className="text-sm text-muted-foreground">
             This is the SQL query that will be executed.
           </DialogDescription>

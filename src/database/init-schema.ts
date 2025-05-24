@@ -19,6 +19,4 @@ export const initSchema = async (database: PGliteWorker) => {
   await database.query(`
       CREATE INDEX IF NOT EXISTS idx_patient_name ON patients (last_name, first_name);
     `);
-
-  console.log("Database schema initialized");
 };

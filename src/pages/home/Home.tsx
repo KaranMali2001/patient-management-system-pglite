@@ -6,10 +6,48 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useDatabaseContext } from "@/context/DatabaseContext";
+import { getPatientCount } from "@/database/queries/getPatientCount";
 import { FileText, Shield, Stethoscope, Users } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 export default function Home() {
+  const [patientCount, setPatientCount] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { database } = useDatabaseContext();
+
+  useEffect(() => {
+    const fetchPatientCount = async () => {
+      try {
+        const count = await getPatientCount(database);
+
+        setPatientCount(count.count); // Fixed: Pass the count value
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching patient count:", error);
+        setPatientCount(0);
+        setIsLoading(false);
+      }
+    };
+
+    if (database) {
+      fetchPatientCount();
+    }
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        fetchPatientCount();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    // Cleanup
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [database]); // Added database as dependency
+
   return (
     <div className="bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 text-slate-900 dark:text-slate-100 transition-colors duration-300">
       {/* Hero Section */}
@@ -27,7 +65,8 @@ export default function Home() {
               Streamline your healthcare management with our comprehensive
               patient registration and medical record system.
             </p>
-            <div className="flex flex-col sm:flex-row gap-6 justify-center">
+
+            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
               <Button
                 asChild
                 size="lg"
@@ -36,6 +75,20 @@ export default function Home() {
                 <Link to="/register-patient">
                   <Users className="mr-3 h-6 w-6" />
                   Register New Patient
+                </Link>
+              </Button>
+
+              {/* Patient Count Button */}
+              <Button
+                asChild
+                size="lg"
+                className="bg-white/20 dark:bg-black/20 backdrop-blur-sm text-white hover:bg-white/30 dark:hover:bg-black/30 border-2 border-white/30 shadow-xl text-lg px-8 py-4"
+              >
+                <Link to="/view-records">
+                  <FileText className="mr-3 h-6 w-6" />
+                  {isLoading
+                    ? "Loading..."
+                    : `View Records (${patientCount ?? 0})`}
                 </Link>
               </Button>
             </div>

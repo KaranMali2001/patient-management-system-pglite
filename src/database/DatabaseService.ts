@@ -1,6 +1,6 @@
+import { live } from "@electric-sql/pglite/live";
 import { PGliteWorker } from "@electric-sql/pglite/worker";
 import { initSchema } from "./init-schema";
-
 let db: PGliteWorker | null = null;
 
 export const initDatabase = async (): Promise<PGliteWorker> => {
@@ -12,7 +12,13 @@ export const initDatabase = async (): Promise<PGliteWorker> => {
           type: "module",
         }
       );
-      db = new PGliteWorker(workerInstance);
+      db = await PGliteWorker.create(workerInstance, {
+        extensions: {
+          live,
+        },
+        dataDir: "idb://patient-system",
+      });
+
       await initSchema(db);
     } catch (error) {
       console.error("Failed to initialize database:", error);

@@ -1,10 +1,19 @@
 import { PatientFormValues } from "@/types/patient/patient-form-type";
-import { initDatabase } from "../DatabaseService";
+import { PGliteWorker } from "@electric-sql/pglite/worker";
 
-export const registerPatient = async (patientData: PatientFormValues) => {
-  const database = await initDatabase();
-  const { firstName, lastName, dateOfBirth, gender, email, phone, address } =
-    patientData;
+export const registerPatient = async (
+  patientData: PatientFormValues,
+  database: PGliteWorker
+) => {
+  const {
+    first_name,
+    last_name,
+    date_of_birth,
+    gender,
+    email,
+    phone,
+    address,
+  } = patientData;
 
   const result = await database.query(
     `INSERT INTO patients 
@@ -13,9 +22,9 @@ export const registerPatient = async (patientData: PatientFormValues) => {
         ($1, $2, $3, $4, $5, $6, $7)
        RETURNING id`,
     [
-      firstName,
-      lastName,
-      dateOfBirth,
+      first_name,
+      last_name,
+      date_of_birth,
       gender,
       email || null,
       phone || null,

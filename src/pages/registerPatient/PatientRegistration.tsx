@@ -2,6 +2,7 @@
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardContent } from "@/components/ui/card";
+import { useDatabaseContext } from "@/context/DatabaseContext";
 import { registerPatient } from "@/database/queries/RegisterPatien";
 import {
   patientFormSchema,
@@ -18,40 +19,46 @@ export default function PatientRegistration() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
-
+  const { database } = useDatabaseContext();
   // Initialize the form with react-hook-form and zod validation
   const form = useForm<PatientFormValues>({
     resolver: zodResolver(patientFormSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
-      dateOfBirth: undefined,
+      first_name: "",
+      last_name: "",
+      date_of_birth: undefined,
       gender: undefined,
       email: "",
       phone: "",
       address: "",
-      medicalNotes: "",
+      medical_notes: "",
     },
   });
 
   const handleSubmit = async (values: PatientFormValues) => {
+    if (!database) {
+      toast.error(
+        "Database is not initialized. Please refresh the page and try again."
+      );
+      return;
+    }
     setIsLoading(true);
     setError("");
     setSuccess(false);
 
     try {
       const patientData: PatientFormValues = {
-        firstName: values.firstName,
-        lastName: values.lastName,
-        dateOfBirth: values.dateOfBirth,
+        first_name: values.first_name,
+        last_name: values.last_name,
+        date_of_birth: values.date_of_birth,
         gender: values.gender,
         email: values.email,
         phone: values.phone,
         address: values.address,
-        medicalNotes: values.medicalNotes,
+        medical_notes: values.medical_notes,
       };
 
-      await registerPatient(patientData);
+      await registerPatient(patientData, database);
       toast.success("Patient has been successfully registered in the system.");
       form.reset();
     } catch (error) {

@@ -71,7 +71,7 @@ export const PatientRegistrationForm: React.FC<RegisterPatientFormProps> = ({
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               <FormField
                 control={form.control}
-                name="firstName"
+                name="first_name"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-slate-700 dark:text-slate-300 font-medium">
@@ -91,7 +91,7 @@ export const PatientRegistrationForm: React.FC<RegisterPatientFormProps> = ({
 
               <FormField
                 control={form.control}
-                name="lastName"
+                name="last_name"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-slate-700 dark:text-slate-300 font-medium">
@@ -111,7 +111,7 @@ export const PatientRegistrationForm: React.FC<RegisterPatientFormProps> = ({
 
               <FormField
                 control={form.control}
-                name="dateOfBirth"
+                name="date_of_birth"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
                     <FormLabel className="text-slate-700 dark:text-slate-300 font-medium">
@@ -301,7 +301,7 @@ export const PatientRegistrationForm: React.FC<RegisterPatientFormProps> = ({
 
             <FormField
               control={form.control}
-              name="medicalNotes"
+              name="medical_notes"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-slate-700 dark:text-slate-300 font-medium">

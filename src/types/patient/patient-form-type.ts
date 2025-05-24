@@ -1,13 +1,13 @@
 import { z } from "zod";
 
 export const patientFormSchema = z.object({
-  firstName: z
+  first_name: z
     .string()
     .min(2, { message: "First name must be at least 2 characters." }),
-  lastName: z
+  last_name: z
     .string()
     .min(2, { message: "Last name must be at least 2 characters." }),
-  dateOfBirth: z.date({
+  date_of_birth: z.coerce.date({
     required_error: "Date of Birth is required.",
     invalid_type_error: "Please enter a valid date.",
   }),
@@ -21,7 +21,7 @@ export const patientFormSchema = z.object({
   address: z
     .string()
     .min(5, { message: "Address must be at least 5 characters." }),
-  medicalNotes: z.string().optional(),
+  medical_notes: z.string().optional(),
 });
 
 export type PatientFormValues = z.infer<typeof patientFormSchema>;
